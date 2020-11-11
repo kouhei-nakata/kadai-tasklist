@@ -13,10 +13,13 @@
         @include('commons.navbar')
 
         <div class="container">
+            {{-- エラーメッセージ --}}
+            @include('commons.error_tasks')
+
             @yield('content')
         </div>
 
-        <!-- JavaScriptの指定は省略 -->
+        <!-- JavaScriptの定義は省略 -->
 
     </body>
 </html>
