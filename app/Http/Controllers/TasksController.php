@@ -17,9 +17,18 @@ class TasksController extends Controller
     {
         $tasks = Task::all();
 
-        return view('welcome', [
-            'tasks' => $tasks,
-        ]);
+         $data = [];
+        if (\Auth::check()) { // 認証済みの場合
+            // 認証済みユーザを取得
+            $user = \Auth::user();
+            $data = [
+                'user' => $user,
+                'tasks' => $tasks,
+            ];
+        }
+
+        // Welcomeビューでそれらを表示
+        return view('welcome', $data);
     }
 
     /**
@@ -53,11 +62,15 @@ class TasksController extends Controller
         $task = new Task;
         $task->status = $request->status;
         $task->content = $request->content;
+        $task->user_id = $request->user()->id;
         $task->save();
 
+         // 前のURLへリダイレクトさせる
         return redirect('/');
+        
     }
-
+    
+        
     /**
      * Display the specified resource.
      *
@@ -105,10 +118,15 @@ class TasksController extends Controller
         ]);
         
         $task = Task::findOrFail($id);
+  // 認証済みユーザ（閲覧者）がその投稿の所有者である場合は、投稿を削除
+        if (\Auth::id() === $task->user_id) {
         
         $task->status = $request->status; 
         $task->content = $request->content;
+        $task->user_id = $request->user()->id;
         $task->save();
+            
+        }
 
         return redirect('/');
     }
@@ -121,8 +139,13 @@ class TasksController extends Controller
      */
     public function destroy($id)
     {
-        $task = Task::findOrFail($id);
-        $task->delete();
+      // idの値で投稿を検索して取得
+        $task = \App\Task::findOrFail($id);
+
+        // 認証済みユーザ（閲覧者）がその投稿の所有者である場合は、投稿を削除
+        if (\Auth::id() === $task->user_id) {
+            $task->delete();
+        }
 
         return redirect('/');
     }

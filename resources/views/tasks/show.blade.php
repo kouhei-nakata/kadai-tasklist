@@ -6,6 +6,10 @@
 
     <table class="table table-bordered">
         <tr>
+            <th>ユーザー</th>
+            <td>{{$task->user->name}}</td>
+        </tr>
+        <tr>
             <th>id</th>
             <td>{{ $task->id }}</td>
         </tr>

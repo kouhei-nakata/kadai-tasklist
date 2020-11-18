@@ -8,6 +8,7 @@
          <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>ユーザー</th>
                     <th>id</th>
                     <th>ステータス</th>
                     <th>タスク</th>
@@ -17,6 +18,7 @@
                 @foreach ($tasks as $task)
                 <tr>
                     {{-- メッセージ詳細ページへのリンク --}}
+                    <td>{{$task->user->name}}</td>
                     <td>{!! link_to_route('tasks.show', $task->id, ['task' => $task->id]) !!}</td>
                     <td>{{ $task->status }}</td>
                     <td>{{ $task->content }}</td>
